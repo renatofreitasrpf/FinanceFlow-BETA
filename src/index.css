@@ -184,9 +184,258 @@
   font-size: 12px;
 }
 
+.primary-button,
+.secondary-button {
+  height: 42px;
+  border-radius: 9px;
+  padding: 0 16px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.primary-button {
+  border: 0;
+  background: var(--green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.secondary-button {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: #66736b;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.account-card {
+  min-height: 210px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 18px;
+}
+
+.account-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.account-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+}
+
+.account-icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.account-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.account-actions button {
+  height: auto;
+  border: 0;
+  border-radius: 7px;
+  background: #f1f5f2;
+  color: #6d7971;
+  padding: 6px 8px;
+  font-size: 10px;
+}
+
+.account-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.account-card h2 {
+  margin: 18px 0 5px;
+  font-size: 15px;
+}
+
+.account-card p {
+  margin: 0 0 15px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.account-card > strong {
+  font-size: 19px;
+}
+
+.account-card small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.income-text {
+  color: var(--green);
+}
+
+.expense-text {
+  color: #d87857;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.badge-neutral {
+  background: #f0f3f1;
+  color: #68756e;
+}
+
+.modal-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(23, 35, 29, 0.32);
+  backdrop-filter: blur(3px);
+  padding: 20px;
+}
+
+.modal {
+  width: min(520px, 100%);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(23, 35, 29, 0.18);
+  padding: 22px;
+}
+
+.modal-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.modal-heading h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: #f2f5f3;
+  color: #738078;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.transaction-form label {
+  color: #66736b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.transaction-form label input,
+.transaction-form label select {
+  width: 100%;
+  height: 42px;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  margin-top: 7px;
+  padding: 0 11px;
+  outline: 0;
+  font: inherit;
+  font-size: 12px;
+}
+
+.transaction-form label input[type='color'] {
+  padding: 3px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 4px;
+}
+
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #66736b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.field-input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  padding: 0 11px;
+  outline: 0;
+  font: inherit;
+  font-size: 12px;
+}
+
+.field-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(22, 131, 79, 0.1);
+}
+
+.form-error {
+  margin: 0;
+  color: #c64e42;
+  font-size: 11px;
+}
+
 @media (max-width: 1050px) {
   .reports-grid {
     grid-template-columns: 1fr;
+  }
+
+  .account-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -198,6 +447,11 @@
 
   .page-heading {
     align-items: flex-start;
+  }
+
+  .account-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 
   .donut {
