@@ -212,6 +212,15 @@ button { font: inherit; }
 .budget-card h2 { margin: 18px 0 5px; font-size: 15px; }
 .budget-card p { margin: 0 0 6px; color: var(--muted); font-size: 11px; }
 .budget-card > strong { font-size: 19px; }
+.budget-progress { margin-top: 16px; }
+.budget-progress-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; }
+.budget-progress-label > span { color: var(--muted); }
+.budget-progress-label > strong { font-size: 12px; }
+.budget-progress-track { height: 8px; overflow: hidden; border-radius: 999px; background: #edf2ee; margin: 9px 0; }
+.budget-progress-fill { height: 100%; border-radius: inherit; background: var(--green); transition: width .2s ease; }
+.budget-progress-fill.exceeded { background: #d87857; }
+.budget-remaining { margin: 0 !important; color: var(--muted); font-size: 11px; }
+.budget-card.over-budget { border-color: #e5a28d; }
 
 :root[data-theme='dark'] {
   color: #edf4ef;
@@ -241,6 +250,7 @@ button { font: inherit; }
 :root[data-theme='dark'] .transaction-form label select { color: #edf4ef; }
 :root[data-theme='dark'] .nav-item.active { background: #244333; }
 :root[data-theme='dark'] .period-select,
+:root[data-theme='dark'] .budget-progress-track,
 :root[data-theme='dark'] .filter-button,
 :root[data-theme='dark'] .search-field,
 :root[data-theme='dark'] .profile-popover input,

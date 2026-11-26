@@ -6,7 +6,9 @@ import { Input } from '../../components/ui/inputs'
 import { Modal } from '../../components/ui/modal'
 import { useBudgets } from '../../hooks/useBudgets'
 import { useCategories } from '../../hooks/useCategories'
+import { useTransactions } from '../../hooks/useTransactions'
 import type { Budget } from '../../types/budget'
+import { calculateBudgetProgress } from '../../utils/calculations'
 import { formatCurrency } from '../../utils/currency'
 import { getMonthKey } from '../../utils/dates'
 
@@ -21,6 +23,7 @@ function formatMonth(month: string) {
 export default function Budgets() {
   const { budgets, addBudget, updateBudget, deleteBudget } = useBudgets()
   const { categories } = useCategories()
+  const { transactions } = useTransactions()
   const expenseCategories = categories.filter(
     (category) => category.type === 'expense',
   )
@@ -112,32 +115,79 @@ export default function Budgets() {
       </div>
 
       <section className="budget-grid" aria-label="Orcamentos cadastrados">
-        {sortedBudgets.map((budget) => (
-          <article className="budget-card" key={budget.id}>
-            <div className="budget-card-heading">
-              <Badge>{formatMonth(budget.month)}</Badge>
-              <div className="budget-actions">
-                <Button
-                  variant="secondary"
-                  type="button"
-                  onClick={() => openEditBudget(budget)}
-                >
-                  Editar
-                </Button>
-                <Button
-                  variant="secondary"
-                  type="button"
-                  onClick={() => removeBudget(budget)}
-                >
-                  Excluir
-                </Button>
+        {sortedBudgets.map((budget) => {
+          const progress = calculateBudgetProgress(budget, transactions)
+          const percentage = new Intl.NumberFormat('pt-BR', {
+            maximumFractionDigits: 1,
+          }).format(progress.percentageUsed)
+          const progressWidth = Math.min(
+            Math.max(progress.percentageUsed, 0),
+            100,
+          )
+
+          return (
+            <article
+              className={`budget-card ${progress.isExceeded ? 'over-budget' : ''}`}
+              key={budget.id}
+            >
+              <div className="budget-card-heading">
+                <Badge>{formatMonth(budget.month)}</Badge>
+                <div className="budget-actions">
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    onClick={() => openEditBudget(budget)}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    onClick={() => removeBudget(budget)}
+                  >
+                    Excluir
+                  </Button>
+                </div>
               </div>
-            </div>
-            <h2>{budget.category}</h2>
-            <p>Limite planejado</p>
-            <strong>{formatCurrency(budget.limit)}</strong>
-          </article>
-        ))}
+              <h2>{budget.category}</h2>
+              <Badge variant={progress.isExceeded ? 'expense' : 'success'}>
+                {progress.isExceeded ? 'Limite excedido' : 'Dentro do limite'}
+              </Badge>
+              <div className="budget-progress">
+                <div className="budget-progress-label">
+                  <span>
+                    {formatCurrency(progress.spent)} de{' '}
+                    {formatCurrency(progress.limit)}
+                  </span>
+                  <strong className={progress.isExceeded ? 'expense-text' : ''}>
+                    {percentage}%
+                  </strong>
+                </div>
+                <div
+                  className="budget-progress-track"
+                  role="progressbar"
+                  aria-label={`Gasto do orcamento de ${budget.category}`}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={progressWidth}
+                  aria-valuetext={`${percentage}% utilizado`}
+                >
+                  <div
+                    className={`budget-progress-fill ${progress.isExceeded ? 'exceeded' : ''}`}
+                    style={{ width: `${progressWidth}%` }}
+                  />
+                </div>
+                <p
+                  className={`budget-remaining ${progress.isExceeded ? 'expense-text' : ''}`}
+                >
+                  {progress.isExceeded
+                    ? `Excedido em ${formatCurrency(Math.abs(progress.remaining))}`
+                    : `Restante ${formatCurrency(progress.remaining)}`}
+                </p>
+              </div>
+            </article>
+          )
+        })}
         {sortedBudgets.length === 0 && (
           <div className="empty-state">
             Nenhum orcamento cadastrado. Crie um para definir limites por
