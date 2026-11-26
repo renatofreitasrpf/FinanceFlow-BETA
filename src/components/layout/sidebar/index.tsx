@@ -9,6 +9,7 @@ const Icon = ({ name }: { name: string }) => {
     report: <><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></>,
     bank: <><path d="m3 9 9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18M2 18h20" /></>,
     budget: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18M8 14h3M8 17h7" /></>,
+    goal: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><path d="m12 12 6-6" /></>,
   }
 
   return (

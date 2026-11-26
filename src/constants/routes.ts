@@ -5,6 +5,7 @@ export type Page =
   | 'reports'
   | 'accounts'
   | 'budgets'
+  | 'savingsGoals'
 
 export const pageItems: { label: string; icon: string; page: Page }[] = [
   { label: 'Visao geral', icon: 'grid', page: 'dashboard' },
@@ -13,4 +14,5 @@ export const pageItems: { label: string; icon: string; page: Page }[] = [
   { label: 'Relatorios', icon: 'report', page: 'reports' },
   { label: 'Contas', icon: 'bank', page: 'accounts' },
   { label: 'Orcamentos', icon: 'budget', page: 'budgets' },
+  { label: 'Metas de economia', icon: 'goal', page: 'savingsGoals' },
 ]

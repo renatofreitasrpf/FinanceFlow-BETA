@@ -221,6 +221,15 @@ button { font: inherit; }
 .budget-progress-fill.exceeded { background: #d87857; }
 .budget-remaining { margin: 0 !important; color: var(--muted); font-size: 11px; }
 .budget-card.over-budget { border-color: #e5a28d; }
+.savings-goal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.savings-goal-card { min-height: 150px; border: 1px solid var(--border); border-radius: 12px; background: #fff; padding: 18px; }
+.savings-goal-card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.savings-goal-card-heading h2 { margin: 4px 0 0; font-size: 15px; }
+.savings-goal-card-heading button { flex-shrink: 0; }
+.savings-goal-details { display: grid; gap: 12px; margin: 20px 0 0; }
+.savings-goal-details div { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.savings-goal-details dt { color: var(--muted); font-size: 11px; }
+.savings-goal-details dd { margin: 0; font-size: 12px; font-weight: 700; text-align: right; }
 
 :root[data-theme='dark'] {
   color: #edf4ef;
@@ -239,6 +248,7 @@ button { font: inherit; }
 :root[data-theme='dark'] .table-panel,
 :root[data-theme='dark'] .category-card,
 :root[data-theme='dark'] .budget-card,
+:root[data-theme='dark'] .savings-goal-card,
 :root[data-theme='dark'] .profile-popover,
 :root[data-theme='dark'] .category-form,
 :root[data-theme='dark'] .modal { background: #1b2a21; }
@@ -270,6 +280,7 @@ button { font: inherit; }
   .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .account-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .budget-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .savings-goal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .reports-grid { grid-template-columns: 1fr; }
   .table-header, .table-row { grid-template-columns: 2fr 1fr 1fr .9fr; }
   .table-header span:nth-child(3), .table-row > span:nth-child(3) { display: none; }
@@ -298,6 +309,7 @@ button { font: inherit; }
   .category-grid { grid-template-columns: 1fr; }
   .account-grid { grid-template-columns: 1fr; }
   .budget-grid { grid-template-columns: 1fr; }
+  .savings-goal-grid { grid-template-columns: 1fr; }
   .table-header { display: none; }
   .table-row { grid-template-columns: 1fr auto; gap: 6px; padding: 12px 14px; }
   .table-row > span { display: none; }

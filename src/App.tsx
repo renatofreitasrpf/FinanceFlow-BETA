@@ -6,6 +6,7 @@ import Categories from './pages/categories'
 import Reports from './pages/reports'
 import Accounts from './pages/accounts'
 import Budgets from './pages/budgets'
+import SavingsGoals from './pages/savings-goals'
 import { getMonthKey } from './utils/dates'
 import type { Page } from './constants/routes'
 
@@ -34,6 +35,7 @@ function App() {
     if (page === 'reports') return <Reports period={period} onPeriodChange={setPeriod} />
     if (page === 'accounts') return <Accounts />
     if (page === 'budgets') return <Budgets />
+    if (page === 'savingsGoals') return <SavingsGoals />
     return <Dashboard period={period} onPeriodChange={setPeriod} onNavigate={setPage} />
   }
 
