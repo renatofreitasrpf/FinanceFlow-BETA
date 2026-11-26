@@ -19,11 +19,15 @@ export function useRecurringTransactions() {
 
   function addRecurringTransaction(
     transaction: Omit<RecurringTransaction, 'id'>,
-  ) {
-    setRecurringTransactions((current) => [
-      ...current,
-      { ...transaction, id: crypto.randomUUID() },
-    ])
+  ): string {
+    const recurringTransaction = {
+      ...transaction,
+      id: crypto.randomUUID(),
+    }
+
+    setRecurringTransactions((current) => [...current, recurringTransaction])
+
+    return recurringTransaction.id
   }
 
   return { recurringTransactions, addRecurringTransaction }

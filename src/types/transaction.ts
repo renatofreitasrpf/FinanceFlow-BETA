@@ -8,4 +8,5 @@ export interface Transaction {
   account: string
   amount: number
   type: TransactionType
+  recurringTransactionId?: string
 }

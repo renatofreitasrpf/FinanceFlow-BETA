@@ -47,17 +47,24 @@ export default function Transactions({
     transaction: Omit<Transaction, 'id'>,
     frequency?: RecurrenceFrequency,
   ) {
-    if (editing) updateTransaction(editing.id, transaction)
-    else {
+    if (editing) {
+      const values = editing.recurringTransactionId
+        ? {
+            ...transaction,
+            recurringTransactionId: editing.recurringTransactionId,
+          }
+        : transaction
+      updateTransaction(editing.id, values)
+    } else if (frequency) {
+      const { date, ...details } = transaction
+      const recurringTransactionId = addRecurringTransaction({
+        ...details,
+        startDate: date,
+        frequency,
+      })
+      addTransaction({ ...transaction, recurringTransactionId })
+    } else {
       addTransaction(transaction)
-      if (frequency) {
-        const { date, ...details } = transaction
-        addRecurringTransaction({
-          ...details,
-          startDate: date,
-          frequency,
-        })
-      }
     }
     setIsFormOpen(false)
   }
