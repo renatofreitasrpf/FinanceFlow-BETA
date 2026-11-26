@@ -204,6 +204,14 @@ button { font: inherit; }
 .account-card p { margin: 0 0 15px; color: var(--muted); font-size: 11px; }
 .account-card > strong { font-size: 19px; }
 .account-card small { display: block; margin-top: 8px; color: var(--muted); font-size: 10px; }
+.budget-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.budget-card { min-height: 170px; border: 1px solid var(--border); border-radius: 12px; background: #fff; padding: 18px; }
+.budget-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.budget-actions { display: flex; gap: 5px; }
+.budget-actions button { height: 30px; border: 0; border-radius: 7px; background: #f1f5f2; color: #6d7971; padding: 0 8px; cursor: pointer; font-size: 10px; }
+.budget-card h2 { margin: 18px 0 5px; font-size: 15px; }
+.budget-card p { margin: 0 0 6px; color: var(--muted); font-size: 11px; }
+.budget-card > strong { font-size: 19px; }
 
 :root[data-theme='dark'] {
   color: #edf4ef;
@@ -221,6 +229,7 @@ button { font: inherit; }
 :root[data-theme='dark'] .panel,
 :root[data-theme='dark'] .table-panel,
 :root[data-theme='dark'] .category-card,
+:root[data-theme='dark'] .budget-card,
 :root[data-theme='dark'] .profile-popover,
 :root[data-theme='dark'] .category-form,
 :root[data-theme='dark'] .modal { background: #1b2a21; }
@@ -250,6 +259,7 @@ button { font: inherit; }
   .transactions-panel { height: auto; }
   .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .account-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .budget-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .reports-grid { grid-template-columns: 1fr; }
   .table-header, .table-row { grid-template-columns: 2fr 1fr 1fr .9fr; }
   .table-header span:nth-child(3), .table-row > span:nth-child(3) { display: none; }
@@ -277,6 +287,7 @@ button { font: inherit; }
   .search-field { flex-basis: 100%; }
   .category-grid { grid-template-columns: 1fr; }
   .account-grid { grid-template-columns: 1fr; }
+  .budget-grid { grid-template-columns: 1fr; }
   .table-header { display: none; }
   .table-row { grid-template-columns: 1fr auto; gap: 6px; padding: 12px 14px; }
   .table-row > span { display: none; }
