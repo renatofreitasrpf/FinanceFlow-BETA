@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { Budget } from '../types/budget'
+import type { SavingsGoal } from '../types/savingsGoal'
 import type { Transaction } from '../types/transaction'
 import {
   calculateAccountBalance,
   calculateBudgetProgress,
   calculateCategoryTotals,
+  calculateSavingsGoalProgress,
   calculateTotals,
   filterTransactionsByMonth,
 } from './calculations'
@@ -72,6 +74,47 @@ describe('calculateBudgetProgress', () => {
       remaining: 500,
       percentageUsed: 0,
       isExceeded: false,
+    })
+  })
+})
+
+describe('calculateSavingsGoalProgress', () => {
+  const goal: SavingsGoal = {
+    id: 'goal-1',
+    name: 'Viagem',
+    targetAmount: 1000,
+    currentAmount: 300,
+    targetDate: '2027-05-01',
+  }
+
+  it('calcula o valor restante e o percentual acumulado', () => {
+    expect(calculateSavingsGoalProgress(goal)).toEqual({
+      remaining: 700,
+      percentageComplete: 30,
+      progressPercentage: 30,
+      isComplete: false,
+    })
+  })
+
+  it('marca metas atingidas e limita a barra a 100 por cento', () => {
+    expect(
+      calculateSavingsGoalProgress({ ...goal, currentAmount: 1200 }),
+    ).toEqual({
+      remaining: 0,
+      percentageComplete: 120,
+      progressPercentage: 100,
+      isComplete: true,
+    })
+  })
+
+  it('evita divisao por zero para uma meta sem valor-alvo', () => {
+    expect(
+      calculateSavingsGoalProgress({ ...goal, targetAmount: 0 }),
+    ).toEqual({
+      remaining: 0,
+      percentageComplete: 0,
+      progressPercentage: 0,
+      isComplete: false,
     })
   })
 })

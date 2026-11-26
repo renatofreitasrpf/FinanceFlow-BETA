@@ -6,6 +6,7 @@ import { Modal } from '../../components/ui/modal'
 import { useSavingsGoals } from '../../hooks/useSavingsGoals'
 import type { SavingsGoal } from '../../types/savingsGoal'
 import { formatCurrency } from '../../utils/currency'
+import { calculateSavingsGoalProgress } from '../../utils/calculations'
 
 function formatTargetDate(date: string) {
   return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(
@@ -19,6 +20,7 @@ export default function SavingsGoals() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [name, setName] = useState('')
   const [targetAmount, setTargetAmount] = useState('')
+  const [currentAmount, setCurrentAmount] = useState('0')
   const [targetDate, setTargetDate] = useState('')
   const [error, setError] = useState('')
 
@@ -26,6 +28,7 @@ export default function SavingsGoals() {
     setEditing(null)
     setName('')
     setTargetAmount('')
+    setCurrentAmount('0')
     setTargetDate('')
     setError('')
     setIsFormOpen(true)
@@ -35,6 +38,7 @@ export default function SavingsGoals() {
     setEditing(goal)
     setName(goal.name)
     setTargetAmount(String(goal.targetAmount))
+    setCurrentAmount(String(goal.currentAmount))
     setTargetDate(goal.targetDate)
     setError('')
     setIsFormOpen(true)
@@ -44,6 +48,7 @@ export default function SavingsGoals() {
     event.preventDefault()
     const normalizedName = name.trim()
     const parsedTargetAmount = Number(targetAmount)
+    const parsedCurrentAmount = Number(currentAmount)
 
     if (!normalizedName) {
       setError('Informe o nome da meta.')
@@ -55,6 +60,11 @@ export default function SavingsGoals() {
       return
     }
 
+    if (!Number.isFinite(parsedCurrentAmount) || parsedCurrentAmount < 0) {
+      setError('Informe um valor guardado igual ou maior que zero.')
+      return
+    }
+
     if (!targetDate) {
       setError('Informe a data desejada para concluir a meta.')
       return
@@ -63,7 +73,7 @@ export default function SavingsGoals() {
     const values = {
       name: normalizedName,
       targetAmount: parsedTargetAmount,
-      currentAmount: editing?.currentAmount ?? 0,
+      currentAmount: parsedCurrentAmount,
       targetDate,
     }
 
@@ -98,30 +108,68 @@ export default function SavingsGoals() {
         className="savings-goal-grid"
         aria-label="Metas de economia cadastradas"
       >
-        {sortedGoals.map((goal) => (
-          <article className="savings-goal-card" key={goal.id}>
-            <div className="savings-goal-card-heading">
-              <h2>{goal.name}</h2>
-              <Button
-                variant="secondary"
-                type="button"
-                onClick={() => openEditGoal(goal)}
-              >
-                Editar
-              </Button>
-            </div>
-            <dl className="savings-goal-details">
-              <div>
-                <dt>Valor desejado</dt>
-                <dd>{formatCurrency(goal.targetAmount)}</dd>
+        {sortedGoals.map((goal) => {
+          const progress = calculateSavingsGoalProgress(goal)
+          const percentage = new Intl.NumberFormat('pt-BR', {
+            maximumFractionDigits: 1,
+          }).format(progress.percentageComplete)
+
+          return (
+            <article
+              className={`savings-goal-card ${progress.isComplete ? 'goal-complete' : ''}`}
+              key={goal.id}
+            >
+              <div className="savings-goal-card-heading">
+                <h2>{goal.name}</h2>
+                <Button
+                  variant="secondary"
+                  type="button"
+                  onClick={() => openEditGoal(goal)}
+                >
+                  Editar
+                </Button>
               </div>
-              <div>
-                <dt>Data desejada</dt>
-                <dd>{formatTargetDate(goal.targetDate)}</dd>
+              <dl className="savings-goal-details">
+                <div>
+                  <dt>Valor desejado</dt>
+                  <dd>{formatCurrency(goal.targetAmount)}</dd>
+                </div>
+                <div>
+                  <dt>Data desejada</dt>
+                  <dd>{formatTargetDate(goal.targetDate)}</dd>
+                </div>
+              </dl>
+              <div className="savings-goal-progress">
+                <div className="savings-goal-progress-label">
+                  <span>
+                    {formatCurrency(goal.currentAmount)} de{' '}
+                    {formatCurrency(goal.targetAmount)}
+                  </span>
+                  <strong>{percentage}%</strong>
+                </div>
+                <div
+                  className="savings-goal-progress-track"
+                  role="progressbar"
+                  aria-label={`Progresso da meta ${goal.name}`}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={progress.progressPercentage}
+                  aria-valuetext={`${percentage}% do valor desejado`}
+                >
+                  <div
+                    className={`savings-goal-progress-fill ${progress.isComplete ? 'complete' : ''}`}
+                    style={{ width: `${progress.progressPercentage}%` }}
+                  />
+                </div>
+                <p className="savings-goal-remaining">
+                  {progress.isComplete
+                    ? 'Meta alcancada'
+                    : `Faltam ${formatCurrency(progress.remaining)}`}
+                </p>
               </div>
-            </dl>
-          </article>
-        ))}
+            </article>
+          )
+        })}
         {sortedGoals.length === 0 && (
           <div className="empty-state">
             Nenhuma meta cadastrada. Crie uma para planejar sua economia.
@@ -160,16 +208,28 @@ export default function SavingsGoals() {
                 required
               />
               <Input
-                label="Data desejada"
-                type="date"
-                value={targetDate}
+                label="Valor guardado (R$)"
+                type="number"
+                min="0"
+                step="0.01"
+                value={currentAmount}
                 onChange={(event) => {
-                  setTargetDate(event.target.value)
+                  setCurrentAmount(event.target.value)
                   setError('')
                 }}
                 required
               />
             </div>
+            <Input
+              label="Data desejada"
+              type="date"
+              value={targetDate}
+              onChange={(event) => {
+                setTargetDate(event.target.value)
+                setError('')
+              }}
+              required
+            />
             {error && (
               <span className="form-error" role="alert">
                 {error}

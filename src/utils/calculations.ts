@@ -1,6 +1,7 @@
 import type { Transaction } from '../types/transaction'
 import type { FinanceTotals } from '../types/dashboard'
 import type { Budget } from '../types/budget'
+import type { SavingsGoal } from '../types/savingsGoal'
 
 export interface CategoryTotal {
   name: string
@@ -35,6 +36,30 @@ export function calculateBudgetProgress(
     remaining: budget.limit - spent,
     percentageUsed: budget.limit > 0 ? (spent / budget.limit) * 100 : 0,
     isExceeded: spent > budget.limit,
+  }
+}
+
+export interface SavingsGoalProgress {
+  remaining: number
+  percentageComplete: number
+  progressPercentage: number
+  isComplete: boolean
+}
+
+export function calculateSavingsGoalProgress(
+  goal: SavingsGoal,
+): SavingsGoalProgress {
+  const percentageComplete =
+    goal.targetAmount > 0
+      ? (goal.currentAmount / goal.targetAmount) * 100
+      : 0
+
+  return {
+    remaining: Math.max(goal.targetAmount - goal.currentAmount, 0),
+    percentageComplete,
+    progressPercentage: Math.min(Math.max(percentageComplete, 0), 100),
+    isComplete:
+      goal.targetAmount > 0 && goal.currentAmount >= goal.targetAmount,
   }
 }
 

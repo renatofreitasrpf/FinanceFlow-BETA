@@ -230,6 +230,15 @@ button { font: inherit; }
 .savings-goal-details div { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .savings-goal-details dt { color: var(--muted); font-size: 11px; }
 .savings-goal-details dd { margin: 0; font-size: 12px; font-weight: 700; text-align: right; }
+.savings-goal-progress { margin-top: 18px; }
+.savings-goal-progress-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; }
+.savings-goal-progress-label > span { color: var(--muted); }
+.savings-goal-progress-label > strong { font-size: 12px; }
+.savings-goal-progress-track { height: 8px; overflow: hidden; border-radius: 999px; background: #edf2ee; margin: 9px 0; }
+.savings-goal-progress-fill { height: 100%; border-radius: inherit; background: var(--green); transition: width .2s ease; }
+.savings-goal-progress-fill.complete { background: var(--green-dark); }
+.savings-goal-remaining { margin: 0; color: var(--muted); font-size: 11px; }
+.savings-goal-card.goal-complete { border-color: #9acbaa; }
 
 :root[data-theme='dark'] {
   color: #edf4ef;
@@ -261,6 +270,7 @@ button { font: inherit; }
 :root[data-theme='dark'] .nav-item.active { background: #244333; }
 :root[data-theme='dark'] .period-select,
 :root[data-theme='dark'] .budget-progress-track,
+:root[data-theme='dark'] .savings-goal-progress-track,
 :root[data-theme='dark'] .filter-button,
 :root[data-theme='dark'] .search-field,
 :root[data-theme='dark'] .profile-popover input,
