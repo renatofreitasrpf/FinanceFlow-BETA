@@ -1,10 +1,41 @@
 import type { Transaction } from '../types/transaction'
 import type { FinanceTotals } from '../types/dashboard'
+import type { Budget } from '../types/budget'
 
 export interface CategoryTotal {
   name: string
   count: number
   amount: number
+}
+
+export interface BudgetProgress {
+  spent: number
+  limit: number
+  remaining: number
+  percentageUsed: number
+  isExceeded: boolean
+}
+
+export function calculateBudgetProgress(
+  budget: Budget,
+  transactions: Transaction[],
+): BudgetProgress {
+  const spent = transactions
+    .filter(
+      (transaction) =>
+        transaction.type === 'expense' &&
+        transaction.category === budget.category &&
+        transaction.date.startsWith(budget.month),
+    )
+    .reduce((total, transaction) => total + transaction.amount, 0)
+
+  return {
+    spent,
+    limit: budget.limit,
+    remaining: budget.limit - spent,
+    percentageUsed: budget.limit > 0 ? (spent / budget.limit) * 100 : 0,
+    isExceeded: spent > budget.limit,
+  }
 }
 
 export function calculateTotals(transactions: Transaction[]): FinanceTotals {

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import type { Budget } from '../types/budget'
 import type { Transaction } from '../types/transaction'
 import {
   calculateAccountBalance,
+  calculateBudgetProgress,
   calculateCategoryTotals,
   calculateTotals,
   filterTransactionsByMonth,
@@ -12,6 +14,67 @@ const transactions: Transaction[] = [
   { id: '2', name: 'Mercado', category: 'Alimentacao', date: '2026-11-24', account: 'Conta corrente', amount: 300, type: 'expense' },
   { id: '3', name: 'Luz', category: 'Moradia', date: '2026-11-20', account: 'Conta corrente', amount: 200, type: 'expense' },
 ]
+
+describe('calculateBudgetProgress', () => {
+  const budget: Budget = {
+    id: 'budget-1',
+    category: 'Alimentacao',
+    month: '2026-11',
+    limit: 500,
+  }
+
+  it('soma apenas despesas da categoria e do mes do orcamento', () => {
+    const progress = calculateBudgetProgress(budget, [
+      ...transactions,
+      {
+        id: '4',
+        name: 'Compra fora do periodo',
+        category: 'Alimentacao',
+        date: '2026-10-24',
+        account: 'Conta corrente',
+        amount: 100,
+        type: 'expense',
+      },
+      {
+        id: '5',
+        name: 'Reembolso',
+        category: 'Alimentacao',
+        date: '2026-11-25',
+        account: 'Conta corrente',
+        amount: 900,
+        type: 'income',
+      },
+    ])
+
+    expect(progress).toEqual({
+      spent: 300,
+      limit: 500,
+      remaining: 200,
+      percentageUsed: 60,
+      isExceeded: false,
+    })
+  })
+
+  it('retorna percentual acima de 100 e saldo negativo quando excede o limite', () => {
+    expect(calculateBudgetProgress({ ...budget, limit: 250 }, transactions)).toEqual({
+      spent: 300,
+      limit: 250,
+      remaining: -50,
+      percentageUsed: 120,
+      isExceeded: true,
+    })
+  })
+
+  it('retorna progresso zerado sem despesas correspondentes', () => {
+    expect(calculateBudgetProgress(budget, [])).toEqual({
+      spent: 0,
+      limit: 500,
+      remaining: 500,
+      percentageUsed: 0,
+      isExceeded: false,
+    })
+  })
+})
 
 describe('calculateTotals', () => {
   it('separa receitas, despesas e calcula o saldo', () => {
