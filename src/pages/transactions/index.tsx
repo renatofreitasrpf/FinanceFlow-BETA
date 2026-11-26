@@ -8,6 +8,8 @@ import { PageContainer } from '../../components/layout/page-container'
 import { Button } from '../../components/ui/botoes'
 import { TransactionFilters } from './components/transactionFilters'
 import { TransactionList } from './components/transactionList'
+import { useRecurringTransactions } from '../../hooks/useRecurringTransactions'
+import type { RecurrenceFrequency } from '../../types/recurringTransaction'
 
 
 export default function Transactions({
@@ -18,6 +20,7 @@ export default function Transactions({
   onPeriodChange: (period: string) => void
 }) {
   const { transactions, addTransaction, updateTransaction, deleteTransaction } = useTransactions()
+  const { addRecurringTransaction } = useRecurringTransactions()
   const { categories } = useCategories()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Todas')
@@ -40,9 +43,22 @@ export default function Transactions({
     setIsFormOpen(true)
   }
 
-  function saveTransaction(transaction: Omit<Transaction, 'id'>) {
+  function saveTransaction(
+    transaction: Omit<Transaction, 'id'>,
+    frequency?: RecurrenceFrequency,
+  ) {
     if (editing) updateTransaction(editing.id, transaction)
-    else addTransaction(transaction)
+    else {
+      addTransaction(transaction)
+      if (frequency) {
+        const { date, ...details } = transaction
+        addRecurringTransaction({
+          ...details,
+          startDate: date,
+          frequency,
+        })
+      }
+    }
     setIsFormOpen(false)
   }
 

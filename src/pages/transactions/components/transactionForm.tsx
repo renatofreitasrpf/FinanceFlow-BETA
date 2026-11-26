@@ -4,10 +4,14 @@ import { useCategories } from '../../../hooks/useCategories'
 import { useAccounts } from '../../../hooks/useAccounts'
 import { Modal } from '../../../components/ui/modal'
 import { Button } from '../../../components/ui/botoes'
+import type { RecurrenceFrequency } from '../../../types/recurringTransaction'
 
 type TransactionFormProps = {
   transaction?: Transaction | null
-  onSave: (transaction: Omit<Transaction, 'id'>) => void
+  onSave: (
+    transaction: Omit<Transaction, 'id'>,
+    frequency?: RecurrenceFrequency,
+  ) => void
   onClose: () => void
 }
 
@@ -20,6 +24,8 @@ export function TransactionForm({ transaction, onSave, onClose }: TransactionFor
   const [account, setAccount] = useState('')
   const [amount, setAmount] = useState('')
   const [type, setType] = useState<TransactionType>('expense')
+  const [isRecurring, setIsRecurring] = useState(false)
+  const [frequency, setFrequency] = useState<RecurrenceFrequency>('monthly')
 
   useEffect(() => {
     if (!transaction) {
@@ -29,6 +35,8 @@ export function TransactionForm({ transaction, onSave, onClose }: TransactionFor
       setAccount(accounts[0]?.name ?? '')
       setAmount('')
       setType('expense')
+      setIsRecurring(false)
+      setFrequency('monthly')
       return
     }
     setName(transaction.name)
@@ -37,6 +45,8 @@ export function TransactionForm({ transaction, onSave, onClose }: TransactionFor
     setAccount(transaction.account)
     setAmount(String(transaction.amount))
     setType(transaction.type)
+    setIsRecurring(false)
+    setFrequency('monthly')
   }, [transaction, accounts, categories])
 
   function handleSubmit(event: FormEvent) {
@@ -51,7 +61,7 @@ export function TransactionForm({ transaction, onSave, onClose }: TransactionFor
       account,
       amount: parsedAmount,
       type,
-    })
+    }, isRecurring ? frequency : undefined)
   }
 
   return (
@@ -77,6 +87,41 @@ export function TransactionForm({ transaction, onSave, onClose }: TransactionFor
               <label><input type="radio" name="type" checked={type === 'income'} onChange={() => setType('income')} />Receita</label>
             </div>
           </fieldset>
+          {!transaction && (
+            <fieldset className="recurrence-fieldset">
+              <legend>Recorrencia</legend>
+              <label className="recurrence-toggle">
+                <input
+                  type="checkbox"
+                  checked={isRecurring}
+                  onChange={(event) => setIsRecurring(event.target.checked)}
+                />
+                Repetir esta transacao
+              </label>
+              {isRecurring && (
+                <label className="recurrence-frequency">
+                  Frequencia
+                  <select
+                    value={frequency}
+                    onChange={(event) => {
+                      const selectedFrequency = event.target.value
+                      if (
+                        selectedFrequency === 'weekly' ||
+                        selectedFrequency === 'monthly' ||
+                        selectedFrequency === 'yearly'
+                      ) {
+                        setFrequency(selectedFrequency)
+                      }
+                    }}
+                  >
+                    <option value="weekly">Semanal</option>
+                    <option value="monthly">Mensal</option>
+                    <option value="yearly">Anual</option>
+                  </select>
+                </label>
+              )}
+            </fieldset>
+          )}
           <div className="modal-actions">
             <Button variant="secondary" type="button" onClick={onClose}>Cancelar</Button>
             <Button type="submit">Salvar transacao</Button>

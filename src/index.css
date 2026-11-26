@@ -158,6 +158,11 @@ button { font: inherit; }
 .type-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 7px; }
 .type-options label { height: 42px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 8px; padding: 0 10px; cursor: pointer; }
 .type-options input { width: auto; height: auto; margin: 0; accent-color: var(--green); }
+.transaction-form .recurrence-fieldset { display: grid; gap: 12px; border: 1px solid var(--border); border-radius: 9px; padding: 12px; }
+.recurrence-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.transaction-form .recurrence-toggle input { width: auto; height: auto; margin: 0; accent-color: var(--green); }
+.recurrence-frequency { display: flex; flex-direction: column; gap: 7px; }
+.recurrence-frequency select { width: 100%; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 4px; }
 .secondary-button { height: 42px; border: 1px solid var(--border); border-radius: 9px; background: #fff; color: #66736b; padding: 0 16px; cursor: pointer; font-size: 12px; }
 .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 8px; font-size: 10px; font-weight: 700; }
