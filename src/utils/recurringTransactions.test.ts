@@ -68,4 +68,33 @@ describe('generateDueRecurringTransactions', () => {
       result.generatedTransactions.map((transaction) => transaction.date),
     ).toEqual(['2026-02-28', '2025-02-28'])
   })
+
+  it('nao duplica ocorrencias ja registradas ao processar novamente', () => {
+    const existingOccurrence = {
+      id: 'existing-occurrence',
+      recurringTransactionId: recurringTransaction.id,
+      name: recurringTransaction.name,
+      category: recurringTransaction.category,
+      date: '2026-11-08',
+      account: recurringTransaction.account,
+      amount: recurringTransaction.amount,
+      type: recurringTransaction.type,
+    }
+
+    const firstResult = generateDueRecurringTransactions(
+      [recurringTransaction],
+      [existingOccurrence],
+      '2026-11-16',
+    )
+    const secondResult = generateDueRecurringTransactions(
+      firstResult.recurringTransactions,
+      [existingOccurrence, ...firstResult.generatedTransactions],
+      '2026-11-16',
+    )
+
+    expect(
+      firstResult.generatedTransactions.map((transaction) => transaction.date),
+    ).toEqual(['2026-11-15'])
+    expect(secondResult.generatedTransactions).toEqual([])
+  })
 })
